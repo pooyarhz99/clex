@@ -1,0 +1,9 @@
+class MyClass {
+public:
+	unsigned short x;
+	MyClass(unsigned short x): x{x} {}
+};
+
+int main() {
+	if (x == y) printf("hello world!\n");
+}
