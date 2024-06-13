@@ -1,17 +1,19 @@
 /*==============================================================================
-TERMINOLOGY:
+A C/C++/Objective-C preprocessor + lexer + parser.
+
+CONVENTIONS:
 	App namespace:
 	Contains the functuinality of this program. Any programmer who wants to work
 	on this project and extend it, debug it, or refactor and clean it up, can
 	use these stuff to make their life easier. Or don't...it's just some
-	unrelated utilities, use your own stuff or libraries if you want.
-*/
+	unrelated utilities, use your own stuff or libraries if you want. */
 
 #include <Foundation/Foundation.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <stdint.h>
 #include <string.h>
+//#include "sal.h"
 
 using namespace std;
 
@@ -21,6 +23,7 @@ using namespace std;
 /******************************************************************************/
 
 #define ALLOCATION_SIZE 8192
+#define SHOW_DEBUG_INFO 1
 
 #pragma GCC diagnostic ignored "-fpermissive" // disables -fpermissive flag, errors in GCC 4.7+
 
@@ -62,38 +65,38 @@ namespace App
 	}
 }
 
-#define SHOW_DEBUG_INFO
-
 int main(int argc, char *argv[])
 {	// Static Initializations
 	initialize_string_memory();
 	
 
-	#ifdef SHOW_DEBUG_INFO
+	#if SHOW_DEBUG_INFO == 1
 	printf("---------------------------------------------------------------\n");
 	printf("----------- DEBUG INFORMATOIN\n");
 	#endif
 
 	zstr source_code = App::ReadFile("sample.txt");
 	
-	// print source code
+	// Print source code.
 	// printf("Source Code:\n");
 	// printf(source_code);
 
 	FTokenList *tokens = lex_string(source_code);
 
-	// print errors, if any
+	// Print errors, if any.
 	printf("\n\nErrors: (%d)\n", error_log.error_count);
 	for (int i = 0; i < error_log.error_count; i++)
 	{	printf("\tmain.mm(0, 0): %s\n", error_log.error_list[i].error_message);
 	}
 	
-	// print lexer state
+	// Print lexer state.
+	#if SHOW_DEBUG_INFO == 1
 	printf("\nList of Tokens: (%d)\n", tokens->len);
 	for (int i = 0; i < tokens->len; i++)
 	{	printf("\t%d) ", i+1);
 		App::PrintToken(&tokens->data[i]);
 	}
+	#endif
 	
 	return(0);
 }

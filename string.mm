@@ -82,6 +82,18 @@ fstr fstr_from_zstr(zstr from)
 
 
 
+/*
+| ------------------------------------------------------------------------------
+| Converts a zero-terminated string to a pascal string.
+| ------------------------------------------------------------------------------
+| Size of the output buffer is implicitly assumed as: ps[0] + 1
+*/
+void pstozs(zstr buf, const_pstr ps)
+{
+	memcpy(buf, ps + 1, ps[0] + 1);
+	buf[ps[0] + 1] = '\0';
+}
+
 
 /*
 | ------------------------------------------------------------------------------

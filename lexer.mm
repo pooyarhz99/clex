@@ -198,7 +198,8 @@ FTokenList *lex_string(const_zstr s)
 
 
 namespace App
-{	// For debugging. Prints a humand-readable text for a token.
+{	// For debugging. Prints a humand-readable text for a token into the
+	// specified stream.
 	void PrintToken(struct token *token)
 	{	switch (token->type)
 		{	case ';': { printf("Semi-colon\n");        } break;
@@ -223,7 +224,7 @@ namespace App
 			{	printf("%d\n", token->value.integer);
 			} break;
 			case token::TT_StringLiteral:
-			{	printf("\"%s\"\n", token->value.zs);
+			{	printf("\"%s\\0\"\n", token->value.zs);
 			} break;
 
 			case token::TT_Name:
