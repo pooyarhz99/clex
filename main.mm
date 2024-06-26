@@ -22,10 +22,10 @@ using namespace std;
 /*                               Configurations                               */
 /******************************************************************************/
 
-#define ALLOCATION_SIZE 8192
-#define SHOW_DEBUG_INFO 1
+#define ALLOCATION_SIZE 8192    // the default page size of the application, independent of the OS page size
+#define SHOW_DEBUG_INFO 1       // whether to output extra debug info to stdout or not, values can be 0 or 1
 
-#pragma GCC diagnostic ignored "-fpermissive" // disables -fpermissive flag, errors in GCC 4.7+
+#pragma GCC diagnostic ignored "-fpermissive" // disables -fpermissive flag, gives a compile error in GCC 4.7+
 
 
 /******************************************************************************/
@@ -35,13 +35,15 @@ using namespace std;
 // TODO(pooya): Add your types here...
 
 
-#include "char.mm"      // character handling
-#include "string.mm"    // string memory management
-#include "error.mm"     // error handling
-#include "lexer.mm"     // lexer
+// Each module depends on the previously imported modules. Be careful if you
+// want to reorder this, or add a new module of your own.
+#import "char.mm"      // character handling
+#import "string.mm"    // string memory management
+#import "error.mm"     // error handling
+#import "lexer.mm"     // lexer
 
 namespace App
-{	static zstr ReadFile(const_zstr filename)
+{	static zstr ReadTextFile(const_zstr filename)
 	{	FILE* fs = fopen(filename, "rb");
 		if (fs == NULL)
 		{	printf("file \"%s\" cannot be opened", filename);
@@ -55,7 +57,7 @@ namespace App
 		zstr contents = (zstr)malloc(size + 1);
 		if (contents == NULL)
 		{	printf("not enough memory...bailing out\n");
-			exit(1);
+			_Exit(EXIT_FAILURE);
 		}
 		fread(contents, size, 1, fs);
 		contents[size] = '\0';
@@ -68,14 +70,13 @@ namespace App
 int main(int argc, char *argv[])
 {	// Static Initializations
 	initialize_string_memory();
-	
 
 	#if SHOW_DEBUG_INFO == 1
 	printf("---------------------------------------------------------------\n");
 	printf("----------- DEBUG INFORMATOIN\n");
 	#endif
 
-	zstr source_code = App::ReadFile("sample.txt");
+	zstr source_code = App::ReadTextFile("sample.txt");
 	
 	// Print source code.
 	// printf("Source Code:\n");

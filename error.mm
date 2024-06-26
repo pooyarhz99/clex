@@ -6,8 +6,10 @@ static struct
 	{	uint64_t line_number;
 		uint64_t column_number;
 		const_zstr error_message;
+		
 	} *error_list;
 	size_t error_count;
+
 } error_log = {
 	(typeof(*error_log.error_list)*)calloc(ALLOCATION_SIZE, sizeof(*error_log.error_list)),
 	0

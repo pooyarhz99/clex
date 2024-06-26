@@ -7,6 +7,7 @@ String memory management library. */
 // allocator such as VirutalAlloc()/mmap() or our own allocator.
 
 
+// -----------------------------------------------------------------------------
 // Zero-terminated String
 // 
 // Default C strings that are terminated with a 0 byte.
@@ -16,6 +17,7 @@ typedef char *zstr;
 typedef const char *const_zstr;
 
 
+// -----------------------------------------------------------------------------
 // Pascal String
 // 
 // Always occupies 256 bytes. Size is stored at index 0 (first byte).
@@ -25,30 +27,29 @@ typedef char pstr[256];
 typedef const char const_pstr[256];
 
 
+// -----------------------------------------------------------------------------
 // Fat String
 // 
 // Like a pascal string, but with two differences:
 // 1. the size is 2 bytes
 // 2. the buffer is always the same size as length
-// 
-// Implementation Note:
-// never use _fstr_intenral outside of this file, this is not part of the API, but rather to ease the implementation
-
 typedef struct
 {	int16_t len; // how many characters are there in the string
 	char txt[];  // the text
-} _fstr_internal, *fstr;
+
+} fstr;
 
 
 
 
-
+// -----------------------------------------------------------------------------
 // String Memory
 // A segment of memory which contains all dynamic immutable strings.
-// It is linked list of blocks of 8192 bytes (8KB).
+// It is a linked list of blocks of 8192 bytes (8KB) each.
 struct
 {	char *memory; // points to the initial block
 	char *last;   // points to one byte past the last stored string
+
 } string_memory;
 
 // Initializes the string memory.
@@ -86,12 +87,12 @@ fstr fstr_from_zstr(zstr from)
 | ------------------------------------------------------------------------------
 | Converts a zero-terminated string to a pascal string.
 | ------------------------------------------------------------------------------
-| Size of the output buffer is implicitly assumed as: ps[0] + 1
+| Size of the output buffer is implicitly assumed as: src[0] + 1
 */
-void pstozs(zstr buf, const_pstr ps)
+void pstozs(zstr buf, const_pstr src)
 {
-	memcpy(buf, ps + 1, ps[0] + 1);
-	buf[ps[0] + 1] = '\0';
+	memcpy(buf, src + 1, src[0] + 1);
+	buf[src[0]] = '\0';
 }
 
 
